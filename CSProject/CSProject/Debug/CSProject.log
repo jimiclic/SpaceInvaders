@@ -1,0 +1,7 @@
+﻿  Main.cpp
+C:\Users\jimic\Desktop\Project File\CSProject\CSProject\Main.cpp(13,3): error C2146: syntax error: missing ';' before identifier 'sfEvent'
+C:\Users\jimic\Desktop\Project File\CSProject\CSProject\Main.cpp(13,3): error C2065: 'sfEvent': undeclared identifier
+C:\Users\jimic\Desktop\Project File\CSProject\CSProject\Main.cpp(13,11): error C2146: syntax error: missing ';' before identifier 'event'
+C:\Users\jimic\Desktop\Project File\CSProject\CSProject\Main.cpp(13,11): error C2065: 'event': undeclared identifier
+C:\Users\jimic\Desktop\Project File\CSProject\CSProject\Main.cpp(17,27): error C2065: 'event': undeclared identifier
+C:\Users\jimic\Desktop\Project File\CSProject\CSProject\Main.cpp(19,8): error C2065: 'event': undeclared identifier
