@@ -15,6 +15,7 @@
 	This header file will contain all the declarations of the game class.
 	We should also put all the declarations of ememies, the player, bullets, etc. here too.
 */
+class Enemy;
 
 class Game
 {
@@ -28,17 +29,13 @@ private:
 
 	// Game logic
 	float enemySpawnTimer;
-	float enemySpawnTimerMax;
-	int maxEnemies;
 
 	// THIS WILL BE MOVED ONCE I MAKE AN ENEMY CLASS
-	std::vector<sf::RectangleShape> enemies;
-	sf::RectangleShape basicenemy;
+	std::vector<Enemy*> enemies;
 
 	// Private Functions
 	void initializeVariables();
 	void initWindow();
-	void initBasicEnemy(); // THIS WILL BE MOVED ONCE I MAKE AN ENEMY CLASS
 
 public:
 	// Constructor
@@ -48,9 +45,10 @@ public:
 
 	// Accessors
 	const bool running() const;
+	const float getEnemySpawnTimer() const;
 
 	// Public Functions
-	void spawnEnemy(); // THIS WILL BE MOVED ONCE I MAKE AN ENEMY CLASS
+	void newEnemy(Enemy* enemy);
 	void updateEnemy();
 	void renderEnemy();
 
@@ -60,31 +58,24 @@ public:
 };
 
 // I'm working on separating the enemy from the game class
-/*
+
 class Enemy
 {
-public:
-	// Constructor
-	Enemy();
-	// Destructor
-	~Enemy();
-
-	// Variables
+private:
 	int life;
 	int damage;
 
-	// Public Functions
-	void hitPlayer(); // will hit player for hit points based on damage
+public:
+	sf::RectangleShape shape;
+	Enemy(int lifepoints, int damagepoints);
 };
 
 class BasicEnemy : public Enemy
 {
+private:
+
 public:
 	BasicEnemy();
-	~BasicEnemy();
-
-	// Variables for the basicenemy
-	sf::RectangleShape basicenemy;
+	void spawnEnemy(Game* game);
 };
-*/
 #endif

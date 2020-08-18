@@ -4,13 +4,13 @@
 	This is where I will place all of my definitions from Game.h.
 */
 
+// GAME CLASS
+
 // Private functions
 void Game::initializeVariables()
 {
 	this->window = nullptr;
 	this->enemySpawnTimer = 0.f;
-	this->enemySpawnTimerMax = 100.f;
-	this->maxEnemies = 5;
 }
 
 void Game::initWindow()
@@ -22,28 +22,11 @@ void Game::initWindow()
 	this->window->setFramerateLimit(60);
 }
 
-void Game::initBasicEnemy()
-{
-	this->basicenemy.setPosition(10.f, 10.f);
-	this->basicenemy.setSize(sf::Vector2f(15.f, 15.f));
-	this->basicenemy.setFillColor(sf::Color::Red);
-
-	// this is only if you want an outline around the basic enemy
-	/*
-	this->basicenemy.setOutlineColor(sf::Color::White);
-	this->basicenemy.setOutlineThickness(5.f);
-	*/
-
-
-}
-
-
 // Constructor
 Game::Game()
 {
 	this->initializeVariables();
 	this->initWindow();
-	this->initBasicEnemy();
 }
 
 // Destructor
@@ -57,59 +40,55 @@ const bool Game::running() const
 	return this->window->isOpen();
 }
 
+const float Game::getEnemySpawnTimer() const
+{
+	return enemySpawnTimer;
+}
+
 // Public functions
 
-void Game::spawnEnemy()
+
+
+void Game::newEnemy(Enemy *enemy)
 {
-	this->basicenemy.setPosition(
-		static_cast<float>(1000.f - this->basicenemy.getSize().x),
-		static_cast<float>(rand() % static_cast<int>((this->window->getSize().y - this->basicenemy.getSize().y)))
-	);
-
-	this->basicenemy.setFillColor(sf::Color::Red);
-
-	this->enemies.push_back(this->basicenemy);
+	this->enemies.push_back(enemy);
 }
 
 void Game::updateEnemy()
 {
 	// mechanism for spawning the enemy
 	// this is more of a counter for enemy spawning instead of spawning them randomly, I'll work on getting it to be random
-	if (this->enemies.size() < this->maxEnemies)
+	
+	if (static_cast<int>(enemySpawnTimer) % 100 == 0)
 	{
-		if (this->enemySpawnTimer >= this->enemySpawnTimerMax)
-		{
-			this->enemySpawnTimer = 0.f;
-			this->spawnEnemy();
-		}
-		else
-		{
-			this->enemySpawnTimer += 1.f;
-		}
+		BasicEnemy spawn;
+		spawn.spawnEnemy(this);
 	}
+	enemySpawnTimer += 1.f;
 
 	// moving all the enemies from right to left by scaling through the enemies vector
 	// also removes enemies if they reach the end of the screen
-	for (int i = 0; i < this->enemies.size(); i++)
+	for (size_t i = 0; i < enemies.size(); i++)
 	{
-		this->enemies[i].move(-5.f, 0.f);
+		this->enemies[i]->shape.move(-5.f, 0.f);
 
-		if (this->basicenemy.getPosition().x <= 0)
+		if (enemies[i]->shape.getPosition().x <= 0)
 		{
 			this->enemies.erase(this->enemies.begin() + i); // might have to change this to get exact enemy instead of just the last enemy in the vector
+
 		}
 	}
 }
-
-void Game::renderEnemy()
+/*
+void Game::renderEnemy() // find a way to fix this so it can draw the enemies
 {
 	// rendering all the enemies by scaling through the enemies vector
-	for (auto& e : this->enemies)
+	for (size_t i = 0; i < enemies.size(); i++)
 	{
-		this->window->draw(e);
+		window->draw(enemies[i]->shape);
 	}
 }
-
+*/
 void Game::pollEvents()
 {
 	while (this->window->pollEvent(this->event))
@@ -138,8 +117,45 @@ void Game::render()
 	this->window->clear(); // can clear it with a color too
 
 	// Draws new frame
-	this->renderEnemy();
+	//this->renderEnemy(); // need to fix this function
 
 	// Displays new frame
 	this->window->display();
+}
+
+
+
+
+
+// ENEMY CLASSES
+
+Enemy::Enemy(int lifepoints, int damagepoints)
+{
+	life = lifepoints;
+	damage = damagepoints;
+}
+
+BasicEnemy::BasicEnemy() : Enemy{ 2, 1}
+{
+	this->shape.setPosition(10.f, 10.f);
+	this->shape.setSize(sf::Vector2f(15.f, 15.f));
+	this->shape.setFillColor(sf::Color::Red);
+
+	// this is only if you want an outline around the basic enemy
+	/*
+	this->shape.setOutlineColor(sf::Color::White);
+	this->shape.setOutlineThickness(5.f);
+	*/
+}
+
+void BasicEnemy::spawnEnemy(Game* game)
+{
+	this->shape.setPosition(
+		static_cast<float>(1000.f - this->shape.getSize().x),
+		static_cast<float>(rand() % static_cast<int>((500.f - this->shape.getSize().y)))
+	);
+
+	this->shape.setFillColor(sf::Color::Red);
+
+	game->newEnemy(this);
 }
