@@ -47,48 +47,16 @@ const float Game::getEnemySpawnTimer() const
 
 // Public functions
 
-
-
-void Game::newEnemy(Enemy *enemy)
+void Game::updateEnemySpawnTimer()
 {
-	this->enemies.push_back(enemy);
-}
-
-void Game::updateEnemy()
-{
-	// mechanism for spawning the enemy
-	// this is more of a counter for enemy spawning instead of spawning them randomly, I'll work on getting it to be random
-	
-	if (static_cast<int>(enemySpawnTimer) % 100 == 0)
-	{
-		BasicEnemy spawn;
-		spawn.spawnEnemy(this);
-	}
 	enemySpawnTimer += 1.f;
-
-	// moving all the enemies from right to left by scaling through the enemies vector
-	// also removes enemies if they reach the end of the screen
-	for (size_t i = 0; i < enemies.size(); i++)
-	{
-		this->enemies[i]->shape.move(-5.f, 0.f);
-
-		if (enemies[i]->shape.getPosition().x <= 0)
-		{
-			this->enemies.erase(this->enemies.begin() + i); // might have to change this to get exact enemy instead of just the last enemy in the vector
-
-		}
-	}
 }
-/*
-void Game::renderEnemy() // find a way to fix this so it can draw the enemies
+
+void Game::drawEnemy(sf::RectangleShape shape)
 {
-	// rendering all the enemies by scaling through the enemies vector
-	for (size_t i = 0; i < enemies.size(); i++)
-	{
-		window->draw(enemies[i]->shape);
-	}
+	window->draw(shape);
 }
-*/
+
 void Game::pollEvents()
 {
 	while (this->window->pollEvent(this->event))
@@ -107,24 +75,32 @@ void Game::pollEvents()
 
 void Game::update()
 {
-	this->pollEvents();
-	this->updateEnemy();
+	pollEvents();
 }
 
+/* // I got rid of this function and made it into two parts: clearWindow and displayWindow
 void Game::render()
 {
 	// Clears old frame
-	this->window->clear(); // can clear it with a color too
+	window->clear();
 
 	// Draws new frame
-	//this->renderEnemy(); // need to fix this function
+	basicenemy->renderEnemy(this);
 
 	// Displays new frame
-	this->window->display();
+	window->display();
+}
+*/
+
+void Game::clearWindow()
+{
+	window->clear();
 }
 
-
-
+void Game::displayWindow()
+{
+	window->display();
+}
 
 
 // ENEMY CLASSES
@@ -148,14 +124,47 @@ BasicEnemy::BasicEnemy() : Enemy{ 2, 1}
 	*/
 }
 
-void BasicEnemy::spawnEnemy(Game* game)
+void BasicEnemy::spawnEnemy()
 {
-	this->shape.setPosition(
+	shape.setPosition(
 		static_cast<float>(1000.f - this->shape.getSize().x),
 		static_cast<float>(rand() % static_cast<int>((500.f - this->shape.getSize().y)))
 	);
 
-	this->shape.setFillColor(sf::Color::Red);
+	shape.setFillColor(sf::Color::Red);
 
-	game->newEnemy(this);
+	enemies.push_back(shape);
+}
+
+void BasicEnemy::updateEnemy(Game* game)
+{
+	// mechanism for spawning the enemy
+	// this is more of a counter for enemy spawning instead of spawning them randomly, I'll work on getting it to be random
+	
+	if (static_cast<int>(game->getEnemySpawnTimer()) % 100 == 0)
+	{
+		spawnEnemy();
+	}
+	game->updateEnemySpawnTimer();
+
+	// moving all the enemies from right to left by scaling through the enemies vector
+	// also removes enemies if they reach the end of the screen
+	for (size_t i = 0; i < enemies.size(); i++)
+	{
+		enemies[i].move(-5.f, 0.f);
+
+		if (enemies[i].getPosition().x <= 0)
+		{
+			enemies.erase(enemies.begin() + i); // might have to change this to get exact enemy instead of just the last enemy in the vector
+
+		}
+	}
+}
+
+void BasicEnemy::renderEnemy(Game* game)
+{
+	for (size_t i = 0; i < enemies.size(); i++)
+	{
+		game->drawEnemy(enemies[i]);
+	}
 }

@@ -30,9 +30,6 @@ private:
 	// Game logic
 	float enemySpawnTimer;
 
-	// THIS WILL BE MOVED ONCE I MAKE AN ENEMY CLASS
-	std::vector<Enemy*> enemies;
-
 	// Private Functions
 	void initializeVariables();
 	void initWindow();
@@ -48,13 +45,14 @@ public:
 	const float getEnemySpawnTimer() const;
 
 	// Public Functions
-	void newEnemy(Enemy* enemy);
-	void updateEnemy();
-	void renderEnemy();
+	void updateEnemySpawnTimer(); // increases the enemy spawn timer
+	void drawEnemy(sf::RectangleShape shape);
 
 	void pollEvents(); // this is for event polling
 	void update(); // this is for the display
-	void render();
+	// void render(); // I got rid of this function and made it into two parts: clearWindow and displayWindow
+	void clearWindow();
+	void displayWindow();
 };
 
 // I'm working on separating the enemy from the game class
@@ -68,14 +66,18 @@ private:
 public:
 	sf::RectangleShape shape;
 	Enemy(int lifepoints, int damagepoints);
+	virtual void updateEnemy(Game* game) = 0;
+	virtual void renderEnemy(Game* game) = 0;
 };
 
 class BasicEnemy : public Enemy
 {
 private:
-
+	std::vector<sf::RectangleShape> enemies;
 public:
 	BasicEnemy();
-	void spawnEnemy(Game* game);
+	void spawnEnemy();
+	virtual void updateEnemy(Game* game);
+	virtual void renderEnemy(Game* game);
 };
 #endif
