@@ -80,4 +80,15 @@ public:
 	virtual void updateEnemy(Game* game);
 	virtual void renderEnemy(Game* game);
 };
+
+class DiagEnemy : public Enemy
+{
+private:
+	std::vector<sf::RectangleShape> enemies;
+public:
+	DiagEnemy();
+	void spawnEnemy();
+	virtual void updateEnemy(Game* game);
+	virtual void renderEnemy(Game* game);
+};
 #endif
