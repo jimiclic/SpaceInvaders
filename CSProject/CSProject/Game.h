@@ -91,4 +91,5 @@ public:
 	virtual void updateEnemy(Game* game);
 	virtual void renderEnemy(Game* game);
 };
+// new enemy class
 #endif
