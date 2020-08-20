@@ -1,16 +1,15 @@
 #include "Game.h"
-
+#include <cstdlib>
 /*
 	This is where I will place all of my definitions from Game.h.
 */
 
-// GAME CLASS
-
-// Private functions
 void Game::initializeVariables()
 {
 	this->window = nullptr;
 	this->enemySpawnTimer = 0.f;
+	this->enemySpawnTimerMax = 100.f;
+	this->maxEnemies = 5;
 }
 
 void Game::initWindow()
@@ -18,7 +17,6 @@ void Game::initWindow()
 	this->videomode.height = 500; // sets the height of the window
 	this->videomode.width = 1000; // sets the width of the window
 	this->window = new sf::RenderWindow(this->videomode, "Title", sf::Style::Titlebar | sf::Style::Close);
-	
 	this->window->setFramerateLimit(60);
 }
 
@@ -27,11 +25,15 @@ Game::Game()
 {
 	this->initializeVariables();
 	this->initWindow();
+
+	user = new Player();
+	enemies = new Enemies();
 }
 
-// Destructor
 Game::~Game()
 {
+	delete user;
+	delete enemies;
 	delete this->window;
 }
 
@@ -40,21 +42,26 @@ const bool Game::running() const
 	return this->window->isOpen();
 }
 
-const float Game::getEnemySpawnTimer() const
+void Game::renderEnemy()
 {
-	return enemySpawnTimer;
+	// rendering all the enemies by scaling through the enemies vector
+	for (auto& e : enemies->get_enemies())
+	{
+		this->window->draw(e);
+	}
 }
 
-// Public functions
-
-void Game::updateEnemySpawnTimer()
+void Game::renderBullets()
 {
-	enemySpawnTimer += 1.f;
+	for (auto& e : user->get_bullets()->get_bullets())
+	{
+		this->window->draw(e);
+	}
 }
 
-void Game::drawEnemy(sf::RectangleShape shape)
+void Game::renderPlayer()
 {
-	window->draw(shape);
+	this->window->draw(*(user->get_player()));
 }
 
 void Game::pollEvents()
@@ -69,169 +76,49 @@ void Game::pollEvents()
 		case sf::Event::KeyPressed:
 			if (this->event.key.code == sf::Keyboard::Escape) // Closes window if escape key pressed
 				this->window->close();
+			if (this->event.key.code == sf::Keyboard::Space)
+				user->shoot();
+			if (this->event.key.code == sf::Keyboard::Up)
+				user->moveUp();
+			if (this->event.key.code == sf::Keyboard::Down)
+				user->moveDown();
 		}
 	}
+}
+
+void Game::checkCollisions() { //if bullet is 2 units within the enemy, then the user gets a point
+	std::vector<sf::RectangleShape>* b = &(user->get_bullets()->get_bullets());
+	std::vector<sf::RectangleShape>* e = &(enemies->get_enemies());
+
+	//for (int i = 0; i < b->size(); i++) {
+	//	for (int j = 0; j < e->size(); j++) {
+	//		if (abs((*e)[j].getPosition().x - (*b)[i].getPosition().x) < 10 && abs((*e)[j].getPosition().y - (*b)[i].getPosition().y) < 10) {
+	//			b->erase(b->begin() + i);
+	//			e->erase(e->begin() + j);
+	//			cout << "collision detected" << endl;
+	//		}
+	//	}
+	//}
 }
 
 void Game::update()
 {
-	pollEvents();
+	this->pollEvents();
+	enemies->update(maxEnemies, enemySpawnTimer, enemySpawnTimerMax, window->getSize().y);
+	user->updateBullets();
+	//checkCollisions();
 }
 
-/* // I got rid of this function and made it into two parts: clearWindow and displayWindow
 void Game::render()
 {
 	// Clears old frame
-	window->clear();
+	this->window->clear(sf::Color(230, 255, 255)); // can clear it with a color too
 
 	// Draws new frame
-	basicenemy->renderEnemy(this);
+	this->renderEnemy();
+	this->renderBullets();
+	this->renderPlayer();
 
 	// Displays new frame
-	window->display();
-}
-*/
-
-void Game::clearWindow()
-{
-	window->clear();
-}
-
-void Game::displayWindow()
-{
-	window->display();
-}
-
-
-// ENEMY CLASSES
-
-Enemy::Enemy(int lifepoints, int damagepoints)
-{
-	life = lifepoints;
-	damage = damagepoints;
-}
-
-BasicEnemy::BasicEnemy() : Enemy{ 2, 1}
-{
-	shape.setPosition(10.f, 10.f);
-	shape.setSize(sf::Vector2f(15.f, 15.f));
-	shape.setFillColor(sf::Color::Red);
-
-	// this is only if you want an outline around the basic enemy
-	/*
-	this->shape.setOutlineColor(sf::Color::White);
-	this->shape.setOutlineThickness(5.f);
-	*/
-}
-
-void BasicEnemy::spawnEnemy()
-{
-	shape.setPosition(
-		static_cast<float>(1000.f - this->shape.getSize().x),
-		static_cast<float>(rand() % static_cast<int>((500.f - this->shape.getSize().y)))
-	);
-
-	shape.setFillColor(sf::Color::Red);
-
-	enemies.push_back(shape);
-}
-
-void BasicEnemy::updateEnemy(Game* game)
-{
-	// mechanism for spawning the enemy
-	// this is more of a counter for enemy spawning instead of spawning them randomly, I'll work on getting it to be random
-	
-	if (static_cast<int>(game->getEnemySpawnTimer()) % 100 == 0)
-	{
-		spawnEnemy();
-	}
-	game->updateEnemySpawnTimer();
-
-	// moving all the enemies from right to left by scaling through the enemies vector
-	// also removes enemies if they reach the end of the screen
-	for (size_t i = 0; i < enemies.size(); i++)
-	{
-		enemies[i].move(-5.f, 0.f);
-
-		if (enemies[i].getPosition().x <= 0)
-		{
-			enemies.erase(enemies.begin() + i); // might have to change this to get exact enemy instead of just the last enemy in the vector
-
-		}
-	}
-}
-
-void BasicEnemy::renderEnemy(Game* game)
-{
-	for (size_t i = 0; i < enemies.size(); i++)
-	{
-		game->drawEnemy(enemies[i]);
-	}
-}
-
-
-
-
-DiagEnemy::DiagEnemy() : Enemy{ 1, 1 }
-{
-	shape.setPosition(10.f, 10.f);
-	shape.setSize(sf::Vector2f(25.f, 25.f));
-	shape.setFillColor(sf::Color::Magenta);
-}
-
-void DiagEnemy::spawnEnemy()
-{
-	shape.setPosition(
-		static_cast<float>(1000.f - this->shape.getSize().x),
-		static_cast<float>(rand() % static_cast<int>((500.f - this->shape.getSize().y)))
-	);
-
-	shape.setFillColor(sf::Color::Magenta);
-
-	enemies.push_back(shape);
-}
-
-void DiagEnemy::updateEnemy(Game* game) // NEED TO FIX, SHAPE ONLY MOVES UP OR DOWN, WON'T SWITCH OFF, MAYBE IT WON'T CHECK THE POSITION
-{
-	if (static_cast<int>(game->getEnemySpawnTimer()) % 200 == 0)
-	{
-		spawnEnemy();
-	}
-	// game->updateEnemySpawnTimer(); BasicEnemy::updateEnemy is already updating the timer
-
-	bool atTheTop = false;
-	for (size_t i = 0; i < enemies.size(); i++)
-	{
-		if (shape.getPosition().y <= 0) // checking if the shape is at the top to switch movement
-		{
-			atTheTop = true;
-		}
-		else if(shape.getPosition().y >= 500)
-		{
-			atTheTop = false;
-		}
-
-		if (atTheTop) // if the shape is at the top it will move down, if the shape is at the bottom it will move up
-		{
-			enemies[i].move(-5.f, 5.f);
-		}
-		else
-		{
-			enemies[i].move(-5.f, -5.f);
-		}
-
-		if (enemies[i].getPosition().x <= 0)
-		{
-			enemies.erase(enemies.begin() + i); // might have to change this to get exact enemy instead of just the last enemy in the vector
-
-		}
-	}
-}
-
-void DiagEnemy::renderEnemy(Game* game)
-{
-	for (size_t i = 0; i < enemies.size(); i++)
-	{
-		game->drawEnemy(enemies[i]);
-	}
+	this->window->display();
 }
