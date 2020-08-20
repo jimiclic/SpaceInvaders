@@ -20,12 +20,11 @@ private:
 
 	// Game logic
 	float enemySpawnTimer;
-	float enemySpawnTimerMax;
-	int maxEnemies;
 
 	// Game characters
 	Player* user;
-	Enemies* enemies;
+	BasicEnemy* basicenemy;
+	DiagEnemy* diagenemy;
 
 	// Private Functions
 	void initializeVariables();

@@ -8,15 +8,13 @@ void Game::initializeVariables()
 {
 	this->window = nullptr;
 	this->enemySpawnTimer = 0.f;
-	this->enemySpawnTimerMax = 100.f;
-	this->maxEnemies = 5;
 }
 
 void Game::initWindow()
 {
 	this->videomode.height = 500; // sets the height of the window
 	this->videomode.width = 1000; // sets the width of the window
-	this->window = new sf::RenderWindow(this->videomode, "Title", sf::Style::Titlebar | sf::Style::Close);
+	this->window = new sf::RenderWindow(this->videomode, "RyBriSteph's Space Invaders", sf::Style::Titlebar | sf::Style::Close);
 	this->window->setFramerateLimit(60);
 }
 
@@ -27,13 +25,15 @@ Game::Game()
 	this->initWindow();
 
 	user = new Player();
-	enemies = new Enemies();
+	basicenemy = new BasicEnemy();
+	diagenemy = new DiagEnemy();
 }
 
 Game::~Game()
 {
 	delete user;
-	delete enemies;
+	delete basicenemy;
+	delete diagenemy;
 	delete this->window;
 }
 
@@ -45,9 +45,13 @@ const bool Game::running() const
 void Game::renderEnemy()
 {
 	// rendering all the enemies by scaling through the enemies vector
-	for (auto& e : enemies->get_enemies())
+	for (size_t i = 0; i < basicenemy->getBasicEnemiesSize(); i++)
 	{
-		this->window->draw(e);
+		this->window->draw(basicenemy->getBasicEnemies(i));
+	}
+	for (size_t i = 0; i < diagenemy->getDiagEnemiesSize(); i++)
+	{
+		this->window->draw(diagenemy->getDiagEnemies(i));
 	}
 }
 
@@ -88,7 +92,7 @@ void Game::pollEvents()
 
 void Game::checkCollisions() { //if bullet is 2 units within the enemy, then the user gets a point
 	std::vector<sf::RectangleShape>* b = &(user->get_bullets()->get_bullets());
-	std::vector<sf::RectangleShape>* e = &(enemies->get_enemies());
+	std::vector<sf::RectangleShape>* e = &(basicenemy->get_enemies());
 
 	//for (int i = 0; i < b->size(); i++) {
 	//	for (int j = 0; j < e->size(); j++) {
@@ -104,7 +108,8 @@ void Game::checkCollisions() { //if bullet is 2 units within the enemy, then the
 void Game::update()
 {
 	this->pollEvents();
-	enemies->update(maxEnemies, enemySpawnTimer, enemySpawnTimerMax, window->getSize().y);
+	basicenemy->updateEnemy(enemySpawnTimer);
+	diagenemy->updateEnemy(enemySpawnTimer);
 	user->updateBullets();
 	//checkCollisions();
 }

@@ -12,54 +12,11 @@
 
 using namespace std;
 
-class Enemies {
-private:
-	std::vector<sf::RectangleShape> enemies;
-	sf::RectangleShape basicenemy;
+// Game Class forward declaration
+class Game;
 
-public:
-	Enemies() {
-		basicenemy.setSize(sf::Vector2f(50.f, 50.f));
-		basicenemy.setFillColor(sf::Color(255, 92, 51));
-	}
+// MY ENEMY CLASSES
 
-	std::vector<sf::RectangleShape> get_enemies() { return enemies; }
-
-	void spawn(int yPos) {
-		basicenemy.setPosition(
-			static_cast<float>(1000.f - basicenemy.getSize().x),
-			static_cast<float>(rand() % static_cast<int>((yPos - basicenemy.getSize().y)))
-		);
-		enemies.push_back(this->basicenemy);
-	}
-
-	void update(int maxEnemies, float& enemySpawnTimer, float enemySpawnTimerMax, int yPos) {
-		if (enemies.size() < maxEnemies)
-		{
-			if (enemySpawnTimer >= enemySpawnTimerMax)
-			{
-				enemySpawnTimer = 0.f;
-				spawn(yPos);
-			}
-			else
-			{
-				enemySpawnTimer += 1.f;
-			}
-		}
-
-		for (int i = 0; i < enemies.size(); i++)
-		{
-			enemies[i].move(-3.f, 0.f);
-
-			if (enemies[i].getPosition().x <= 0)
-			{
-				enemies.erase(enemies.begin() + i);
-			}
-		}
-	}
-};
-
-/* MY ENEMY CLASSES
 class Enemy
 {
 private:
@@ -73,8 +30,8 @@ public:
 		life = lifepoints;
 		damage = damagepoints;
 	}
-	virtual void updateEnemy(Game* game) = 0;
-	virtual void renderEnemy(Game* game) = 0;
+	virtual void updateEnemy(float& enemySpawnTimer) = 0;
+	// virtual void renderEnemy(Game* game) = 0; might not need since we're rendering from game class
 };
 
 class BasicEnemy : public Enemy
@@ -84,15 +41,14 @@ private:
 public:
 	BasicEnemy() : Enemy{ 2, 1}
 	{
-		shape.setPosition(10.f, 10.f);
-		shape.setSize(sf::Vector2f(15.f, 15.f));
-		shape.setFillColor(sf::Color::Red);
+		shape.setSize(sf::Vector2f(50.f, 50.f));
+		shape.setFillColor(sf::Color(255, 92, 51));
 
 		// this is only if you want an outline around the basic enemy
 		/*
 		this->shape.setOutlineColor(sf::Color::White);
 		this->shape.setOutlineThickness(5.f);
-		star/
+		*/
 	}
 	void spawnEnemy()
 	{
@@ -101,20 +57,18 @@ public:
 			static_cast<float>(rand() % static_cast<int>((500.f - this->shape.getSize().y)))
 		);
 
-		shape.setFillColor(sf::Color::Red);
-
 		enemies.push_back(shape);
 	}
-	virtual void updateEnemy(Game* game)
+	virtual void updateEnemy(float& enemySpawnTimer)
 	{
 		// mechanism for spawning the enemy
 		// this is more of a counter for enemy spawning instead of spawning them randomly, I'll work on getting it to be random
 
-		if (static_cast<int>(game->getEnemySpawnTimer()) % 100 == 0)
+		if (static_cast<int>(enemySpawnTimer) % 100 == 0)
 		{
 			spawnEnemy();
 		}
-		game->updateEnemySpawnTimer();
+		enemySpawnTimer += 1.f;
 
 		// moving all the enemies from right to left by scaling through the enemies vector
 		// also removes enemies if they reach the end of the screen
@@ -128,13 +82,18 @@ public:
 			}
 		}
 	}
-	virtual void renderEnemy(Game* game)
+
+	sf::RectangleShape getBasicEnemies(int i) // to access the enemies vector
 	{
-		for (size_t i = 0; i < enemies.size(); i++)
-		{
-			game->drawEnemy(enemies[i]);
-		}
+		return enemies.at(i);
 	}
+
+	const size_t getBasicEnemiesSize() const // to access enemies vector size
+	{
+		return enemies.size();
+	}
+
+	std::vector<sf::RectangleShape> get_enemies() { return enemies; }
 };
 
 class DiagEnemy : public Enemy
@@ -159,9 +118,9 @@ public:
 
 		enemies.push_back(shape);
 	}
-	virtual void updateEnemy(Game* game)
+	virtual void updateEnemy(float& enemySpawnTimer)
 	{
-		if (static_cast<int>(game->getEnemySpawnTimer()) % 200 == 0)
+		if (static_cast<int>(enemySpawnTimer) % 200 == 0)
 		{
 			spawnEnemy();
 		}
@@ -194,12 +153,49 @@ public:
 			}
 		}
 	}
-	virtual void renderEnemy(Game* game)
+	
+	sf::RectangleShape getDiagEnemies(int i) // to access the enemies vector
 	{
-		for (size_t i = 0; i < enemies.size(); i++)
+		return enemies.at(i);
+	}
+
+	const size_t getDiagEnemiesSize() const // to access enemies vector size
+	{
+		return enemies.size();
+	}
+
+	std::vector<sf::RectangleShape> get_enemies() { return enemies; }
+};
+
+
+
+
+
+
+
+/* Stephanie's update function for enemies
+void update(int maxEnemies, float& enemySpawnTimer, float enemySpawnTimerMax, int yPos) {
+		if (enemies.size() < maxEnemies)
 		{
-			game->drawEnemy(enemies[i]);
+			if (enemySpawnTimer >= enemySpawnTimerMax)
+			{
+				enemySpawnTimer = 0.f;
+				spawn(yPos);
+			}
+			else
+			{
+				enemySpawnTimer += 1.f;
+			}
+		}
+
+		for (int i = 0; i < enemies.size(); i++)
+		{
+			enemies[i].move(-3.f, 0.f);
+
+			if (enemies[i].getPosition().x <= 0)
+			{
+				enemies.erase(enemies.begin() + i);
+			}
 		}
 	}
-};
 */
