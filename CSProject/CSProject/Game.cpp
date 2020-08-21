@@ -1,8 +1,6 @@
 #include "Game.h"
 #include <cstdlib>
-/*
-	This is where I will place all of my definitions from Game.h.
-*/
+#include <string>
 
 void Game::initializeVariables()
 {
@@ -42,7 +40,10 @@ Game::~Game()
 
 const bool Game::running() const
 {
-	return this->window->isOpen();
+	if (this->window->isOpen() == false || user->get_lives() == 0) {
+		return false; 
+	}
+	return true;
 }
 
 void Game::renderEnemy()
@@ -113,7 +114,6 @@ void Game::checkCollisions(std::vector<sf::RectangleShape>* b, std::vector<sf::R
 		for (int j = 0; j < e->size(); j++) {
 			if (check_collide((*b)[i], (*e)[j])) {
 				user->addpoint(1);
-				cout << "SCORE: " << user->get_score() << endl;
 				b->erase(b->begin() + i);
 				e->erase(e->begin() + j);
 			}
@@ -127,7 +127,6 @@ void Game::checkPowerupCollisions(std::vector<sf::RectangleShape>* b, std::vecto
 		for (int j = 0; j < p->size(); j++) {
 			if (check_collide((*b)[i], (*p)[j])) {
 				user->addpoint(10);
-				cout << "SCORE: " << user->get_score() << endl;
 				b->erase(b->begin() + i);
 				p->erase(p->begin() + j);
 			}
@@ -135,11 +134,54 @@ void Game::checkPowerupCollisions(std::vector<sf::RectangleShape>* b, std::vecto
 	}
 }
 
+void Game::showScore() {
+	sf::Font font;
+	if (!font.loadFromFile("SourceCodePro-Regular.ttf")) { cout << "Error loading font file." << endl; }
+
+	string score = to_string(user->get_score());
+	sf::Text text;
+	text.setFont(font);
+	text.setCharacterSize(30);
+	text.setString("Score: " + score);
+	text.setPosition(700, 0);
+	window->draw(text);
+}
+
+void Game::showLives() {
+	sf::Font font;
+	if (!font.loadFromFile("SourceCodePro-Regular.ttf")) { cout << "Error loading font file." << endl; }
+
+	sf::Text text; 
+	text.setFont(font);
+	text.setCharacterSize(30);
+	text.setString("Lives: ");
+	text.setPosition(50, 0);
+	window->draw(text);
+
+	string lives = "";
+	for (int i = 0; i < user->get_lives(); i++) {
+		lives += "* ";
+	}
+
+	text.setCharacterSize(30);
+	text.setString(lives);
+	text.setPosition(175, 0);
+	window->draw(text);
+
+}
+
 void Game::update()
 {
 	this->pollEvents();
-	basicenemy->updateEnemy(enemySpawnTimer);
-	diagenemy->updateEnemy(enemySpawnTimer);
+
+	bool x, y;
+
+	x = basicenemy->updateEnemy(enemySpawnTimer);
+	if (x) { user->loselife(); }
+
+	y = diagenemy->updateEnemy(enemySpawnTimer);
+	if (y) { user->loselife(); }
+
 	user->updateBullets();
 	powerup->updatePowerup(PowerupTimer);
 
@@ -163,7 +205,13 @@ void Game::render()
 	this->renderBullets();
 	this->renderPlayer();
 	this->renderPowerup();
+	this->showScore();
+	this->showLives();
 
 	// Displays new frame
 	this->window->display();
+}
+
+void Game::end_game() {
+	cout << "FINAL SCORE: " << user->get_score() << endl;
 }

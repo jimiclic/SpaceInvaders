@@ -33,6 +33,20 @@ private:
 	void initializeVariables();
 	void initWindow();
 
+	void pollEvents(); // this is for event polling
+
+	void showScore();
+	void showLives();
+
+	void renderEnemy();
+	void renderBullets();
+	void renderPlayer();
+	void renderPowerup();
+
+	bool check_collide(sf::RectangleShape a, sf::RectangleShape b);
+	void checkCollisions(std::vector<sf::RectangleShape>* b, std::vector<sf::RectangleShape>* e);
+	void checkPowerupCollisions(std::vector<sf::RectangleShape>* b, std::vector<sf::RectangleShape>* p);
+
 public:
 	// Constructor
 	Game();
@@ -43,18 +57,10 @@ public:
 	const bool running() const;
 
 	// Public Functions
-	void renderEnemy();
-	void renderBullets();
-	void renderPlayer();
-	void renderPowerup();
-
-	void pollEvents(); // this is for event polling
+	// Public Functions
 	void update(); // this is for the display
 	void render();
-
-	bool check_collide(sf::RectangleShape a, sf::RectangleShape b);
-	void checkCollisions(std::vector<sf::RectangleShape>* b, std::vector<sf::RectangleShape>* e);
-	void checkPowerupCollisions(std::vector<sf::RectangleShape>* b, std::vector<sf::RectangleShape>* p);
+	void end_game();
 };
 
 #endif

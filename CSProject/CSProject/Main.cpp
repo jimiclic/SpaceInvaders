@@ -17,5 +17,7 @@ int main()
 		game.render();
 	}
 
+	game.end_game();
+
 	return 0;
 }

@@ -14,6 +14,7 @@ using namespace std;
 class Player {
 private:
 	int points;
+	int lives;
 	sf::CircleShape* player;
 	Bullets* bullets;
 	sf::Texture playerTexture;
@@ -33,6 +34,7 @@ public:
 		bullets = new Bullets;
 
 		points = 0;
+		lives = 5;
 	}
 
 	~Player() {
@@ -80,6 +82,11 @@ public:
 		points += amount;
 	}
 
+	void loselife() {
+		lives--;
+	}
+
 	int get_score() { return points; }
+	int get_lives() { return lives; }
 
 };

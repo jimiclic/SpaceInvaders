@@ -30,7 +30,7 @@ public:
 		life = lifepoints;
 		damage = damagepoints;
 	}
-	virtual void updateEnemy(float& enemySpawnTimer) = 0;
+	virtual bool updateEnemy(float& enemySpawnTimer) = 0;
 	// virtual void renderEnemy(Game* game) = 0; might not need since we're rendering from game class
 };
 
@@ -63,8 +63,9 @@ public:
 
 		enemies.push_back(shape);
 	}
-	virtual void updateEnemy(float& enemySpawnTimer)
+	virtual bool updateEnemy(float& enemySpawnTimer)
 	{
+		int a = 0;
 		// mechanism for spawning the enemy
 		// this is more of a counter for enemy spawning instead of spawning them randomly, I'll work on getting it to be random
 
@@ -83,8 +84,12 @@ public:
 			if (enemies[i].getPosition().x <= 0)
 			{
 				enemies.erase(enemies.begin() + i); // might have to change this to get exact enemy instead of just the last enemy in the vector
+				a = 1;
 			}
 		}
+
+		if (a == 1) { return true; }
+		return false;
 	}
 
 	sf::RectangleShape getBasicEnemies(int i) // to access the enemies vector
@@ -144,8 +149,9 @@ public:
 
 		enemies.push_back(shape);
 	}
-	virtual void updateEnemy(float& enemySpawnTimer)
+	virtual bool updateEnemy(float& enemySpawnTimer)
 	{
+		int a = 0;
 		if (static_cast<int>(enemySpawnTimer) % 200 == 0)
 		{
 			spawnEnemy();
@@ -188,10 +194,13 @@ public:
 
 			if (enemies[i].getPosition().x <= 0)
 			{
+				a = 1;
 				enemies.erase(enemies.begin() + i); // might have to change this to get exact enemy instead of just the last enemy in the vector
 				randoms.erase(randoms.begin() + i);
 			}
 		}
+		if (a == 1) { return true; }
+		return false;
 	}
 	
 	sf::RectangleShape getDiagEnemies(int i) // to access the enemies vector
