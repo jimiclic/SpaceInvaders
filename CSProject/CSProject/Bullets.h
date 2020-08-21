@@ -14,17 +14,20 @@ class Bullets {
 private:
 	std::vector<sf::RectangleShape> bullets;
 	sf::RectangleShape singlebullet;
+	sf::Texture bulletTexture;
 
 public:
 	Bullets() {
-		singlebullet.setSize(sf::Vector2f(20.f, 20.f));
-		singlebullet.setFillColor(sf::Color(255, 204, 204));
+		singlebullet.setSize(sf::Vector2f(50.f, 20.f));
+		bulletTexture.loadFromFile("missle.png");
+		singlebullet.setTexture(&bulletTexture);
+		bulletTexture.setSmooth(true);
 	}
 
 	std::vector<sf::RectangleShape>* ret_bullets() { return &bullets; }
 
 	void add(int Xpos, int Ypos) {
-		singlebullet.setPosition(Xpos, Ypos + 35);
+		singlebullet.setPosition(Xpos + 10, Ypos + 35);
 		bullets.push_back(singlebullet);
 	}
 

@@ -8,13 +8,11 @@ int main()
 
 	Game game; // creates game object, which also initializes variables and window
 
-
 	while (game.running())
 	{
-
 		// Update
 		game.update();
-
+		
 		// Render
 		game.render();
 	}

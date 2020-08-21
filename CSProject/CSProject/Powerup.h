@@ -34,11 +34,15 @@ class BasicPowerup : public Powerup
 {
 private:
 	std::vector<sf::RectangleShape> powerup;
+	sf::Texture basicPowerupTexture;
 public:
 	BasicPowerup() : Powerup{ 2, 1 }
 	{
-		shape.setSize(sf::Vector2f(30.f, 30.f));
-		shape.setFillColor(sf::Color(124, 252, 0));
+		shape.setSize(sf::Vector2f(40.f, 40.f));
+		// shape.setFillColor(sf::Color(124, 252, 0));
+		basicPowerupTexture.loadFromFile("plusten.png");
+		shape.setTexture(&basicPowerupTexture);
+		basicPowerupTexture.setSmooth(true);
 	}
 	void spawnPowerup()
 	{
@@ -59,7 +63,7 @@ public:
 
 		for (size_t i = 0; i < powerup.size(); i++)
 		{
-			powerup[i].move(-8.f, 0.f);
+			powerup[i].move(-7.f, 0.f);
 
 			if (powerup[i].getPosition().x <= 0)
 			{

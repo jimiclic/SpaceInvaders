@@ -16,13 +16,19 @@ private:
 	int points;
 	sf::CircleShape* player;
 	Bullets* bullets;
+	sf::Texture playerTexture;
 
 public:
+
 	Player() {
 		player = new sf::CircleShape;
+
 		player->setRadius(50);
 		player->setPosition(50, 250);
-		player->setFillColor(sf::Color(204, 204, 255));
+
+		playerTexture.loadFromFile("spaceship.png");
+		player->setTexture(&playerTexture, true);
+		playerTexture.setSmooth(true);
 
 		bullets = new Bullets;
 

@@ -15,7 +15,7 @@ void Game::initWindow()
 {
 	this->videomode.height = 500; // sets the height of the window
 	this->videomode.width = 1000; // sets the width of the window
-	this->window = new sf::RenderWindow(this->videomode, "RyBriSteph's Space Invaders", sf::Style::Titlebar | sf::Style::Close);
+	this->window = new sf::RenderWindow(this->videomode, "RyBriSteph's Space Invaders", sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
 	this->window->setFramerateLimit(60);
 }
 
@@ -156,7 +156,7 @@ void Game::update()
 void Game::render()
 {
 	// Clears old frame
-	this->window->clear(sf::Color(230, 255, 255)); // can clear it with a color too
+	this->window->clear(); // can clear it with a color too
 
 	// Draws new frame
 	this->renderEnemy();

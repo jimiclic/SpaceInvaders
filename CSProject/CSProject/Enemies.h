@@ -38,11 +38,15 @@ class BasicEnemy : public Enemy
 {
 private:
 	std::vector<sf::RectangleShape> enemies;
+	sf::Texture enemyTexture;
 public:
 	BasicEnemy() : Enemy{ 2, 1}
 	{
 		shape.setSize(sf::Vector2f(50.f, 50.f));
-		shape.setFillColor(sf::Color(255, 92, 51));
+
+		enemyTexture.loadFromFile("asteroid.png");
+		shape.setTexture(&enemyTexture);
+		enemyTexture.setSmooth(true);
 
 		// this is only if you want an outline around the basic enemy
 		/*
@@ -109,12 +113,15 @@ class DiagEnemy : public Enemy
 private:
 	std::vector<sf::RectangleShape> enemies;
 	std::vector<int> randoms;
+	sf::Texture diagEnemyTexture;
 public:
 	DiagEnemy() : Enemy{ 1, 1 }
 	{
 		shape.setPosition(10.f, 10.f);
 		shape.setSize(sf::Vector2f(25.f, 25.f));
-		shape.setFillColor(sf::Color::Magenta);
+		diagEnemyTexture.loadFromFile("diagAsteroid.png");
+		shape.setTexture(&diagEnemyTexture);
+		diagEnemyTexture.setSmooth(true);
 	}
 	void spawnEnemy()
 	{
@@ -134,8 +141,6 @@ public:
 				static_cast<float>(500.f - this->shape.getSize().y)
 			);
 		}
-
-		shape.setFillColor(sf::Color::Magenta);
 
 		enemies.push_back(shape);
 	}
