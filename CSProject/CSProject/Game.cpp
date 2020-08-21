@@ -26,6 +26,7 @@ Game::Game()
 	user = new Player();
 	basicenemy = new BasicEnemy();
 	diagenemy = new DiagEnemy();
+	snakeenemy = new SnakeEnemy();
 	powerup = new BasicPowerup();
 }
 
@@ -34,6 +35,7 @@ Game::~Game()
 	delete user;
 	delete basicenemy;
 	delete diagenemy;
+	delete snakeenemy;
 	delete powerup;
 	delete this->window;
 }
@@ -56,6 +58,10 @@ void Game::renderEnemy()
 	for (size_t i = 0; i < diagenemy->getDiagEnemiesSize(); i++)
 	{
 		this->window->draw(diagenemy->getDiagEnemies(i));
+	}
+	for (size_t i = 0; i < snakeenemy->getSnakeEnemiesSize(); i++)
+	{
+		this->window->draw(snakeenemy->getSnakeEnemies(i));
 	}
 }
 
@@ -174,7 +180,7 @@ void Game::update()
 {
 	this->pollEvents();
 
-	bool x, y;
+	bool x, y, z;
 
 	x = basicenemy->updateEnemy(enemySpawnTimer);
 	if (x) { user->loselife(); }
@@ -182,16 +188,21 @@ void Game::update()
 	y = diagenemy->updateEnemy(enemySpawnTimer);
 	if (y) { user->loselife(); }
 
+	z = snakeenemy->updateEnemy(enemySpawnTimer);
+	if (z) { user->loselife(); }
+
 	user->updateBullets();
 	powerup->updatePowerup(PowerupTimer);
 
 	vector<sf::RectangleShape>* b_ptr = user->get_bullets()->ret_bullets();
 	vector<sf::RectangleShape>* e_ptr = basicenemy->get_enemies();
 	vector<sf::RectangleShape>* d_ptr = diagenemy->get_enemies();
+	vector<sf::RectangleShape>* s_ptr = snakeenemy->get_enemies();
 	vector<sf::RectangleShape>* p_ptr = powerup->get_powerup();
 
 	checkCollisions(b_ptr, e_ptr);
 	checkCollisions(b_ptr, d_ptr);
+	checkCollisions(b_ptr, s_ptr);
 	checkPowerupCollisions(b_ptr, p_ptr);
 }
 

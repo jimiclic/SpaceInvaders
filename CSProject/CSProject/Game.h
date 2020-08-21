@@ -27,6 +27,7 @@ private:
 	Player* user;
 	BasicEnemy* basicenemy;
 	DiagEnemy* diagenemy;
+	SnakeEnemy* snakeenemy;
 	BasicPowerup* powerup;
 
 	// Private Functions
