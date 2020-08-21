@@ -228,7 +228,7 @@ public:
 	{
 		shape.setSize(sf::Vector2f(20.f, 20.f));
 
-		enemyTexture.loadFromFile("asteroid.png");
+		enemyTexture.loadFromFile("snakeenemy.png");
 		shape.setTexture(&enemyTexture);
 		enemyTexture.setSmooth(true);
 	}
