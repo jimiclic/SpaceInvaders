@@ -1,0 +1,7 @@
+1. Make sure your VS settings are on Release for x86 (32 bit)
+2. In your Solution Explorer, right click on your project name and click properties
+3. Go to C/C++ > Additional Include Directories (click on the drop down arrow) 
+	> Edit > Click on the red X at the top > Click on the folder icon
+	> Click on the ... button > go to your sfml folder > select the include folder > OK
+4. Go to Linker > Additional Include Directories (click on the drop down arrow) 
+	and follow the same steps as above except choose the lib folder 
