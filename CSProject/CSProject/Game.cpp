@@ -82,9 +82,9 @@ void Game::pollEvents()
 				this->window->close();
 			if (this->event.key.code == sf::Keyboard::Space)
 				user->shoot();
-			if (this->event.key.code == sf::Keyboard::Up)
+			if (this->event.key.code == sf::Keyboard::Up || this->event.key.code == sf::Keyboard::W)
 				user->moveUp();
-			if (this->event.key.code == sf::Keyboard::Down)
+			if (this->event.key.code == sf::Keyboard::Down || this->event.key.code == sf::Keyboard::S)
 				user->moveDown();
 		}
 	}
@@ -101,8 +101,8 @@ void Game::checkCollisions(std::vector<sf::RectangleShape>* b, std::vector<sf::R
 	for (int i = 0; i < b->size(); i++) {
 		for (int j = 0; j < e->size(); j++) {
 			if (check_collide((*b)[i], (*e)[j])) {
-				cout << "collision detected" << endl;
 				user->addpoint();
+				cout << "SCORE: " << user->get_score() << endl;
 				b->erase(b->begin() + i);
 				e->erase(e->begin() + j);
 			}

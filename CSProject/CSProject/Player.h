@@ -74,4 +74,6 @@ public:
 		points++;
 	}
 
+	int get_score() { return points; }
+
 };
