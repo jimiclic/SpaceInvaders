@@ -96,10 +96,19 @@ public:
 	std::vector<sf::RectangleShape>* get_enemies() { return &enemies; }
 };
 
+/*
+class SnakeEnemy : public BasicEnemy
+{
+
+};
+*/
+
+
 class DiagEnemy : public Enemy
 {
 private:
 	std::vector<sf::RectangleShape> enemies;
+	std::vector<int> randoms;
 public:
 	DiagEnemy() : Enemy{ 1, 1 }
 	{
@@ -109,10 +118,22 @@ public:
 	}
 	void spawnEnemy()
 	{
-		shape.setPosition(
-			static_cast<float>(1000.f - this->shape.getSize().x),
-			static_cast<float>(rand() % static_cast<int>((500.f - this->shape.getSize().y)))
-		);
+		int random = (rand() % 2) + 1;
+		randoms.push_back(random);
+		if (random == 1)
+		{
+			shape.setPosition(
+				static_cast<float>(1000.f - this->shape.getSize().x),
+				static_cast<float>(0.f)
+			);
+		}
+		else
+		{
+			shape.setPosition(
+				static_cast<float>(1000.f - this->shape.getSize().x),
+				static_cast<float>(500.f - this->shape.getSize().y)
+			);
+		}
 
 		shape.setFillColor(sf::Color::Magenta);
 
@@ -126,30 +147,44 @@ public:
 		}
 		// game->updateEnemySpawnTimer(); BasicEnemy::updateEnemy is already updating the timer
 
-		bool atTheTop = false;
 		for (size_t i = 0; i < enemies.size(); i++)
 		{
-			if (shape.getPosition().y <= 0) // checking if the shape is at the top to switch movement
+			/* enemies bounce code
+			bool top = false;
+			bool bot = false;
+			if (enemies[i].getPosition().y > 0 || enemies[i].getPosition().y < 500 && top == false && bot == false) // if shape is in the middle, it will move either up or down
 			{
-				atTheTop = true;
+				
+				enemies[i].move(-5.f, -5.f);
 			}
-			else if(shape.getPosition().y >= 500)
+			else if (enemies[i].getPosition().y <= 0 && top == true && bot == false) // if the shape is at the top it will move down
 			{
-				atTheTop = false;
-			}
-
-			if (atTheTop) // if the shape is at the top it will move down, if the shape is at the bottom it will move up
-			{
+				top = true;
+				bot = false;
 				enemies[i].move(-5.f, 5.f);
+			}
+			else if (enemies[i].getPosition().y >= 500 && top == false && bot == true) // if the shape is at the bottom, it will move up
+			{
+				top = false;
+				bot = true;
+				enemies[i].move(-5.f, -5.f);
+			}
+			*/
+
+			if (randoms[i] == 1)
+			{
+				enemies[i].move(-5.f, 2.5f);
 			}
 			else
 			{
-				enemies[i].move(-5.f, -5.f);
+				enemies[i].move(-5.f, -2.5f);
 			}
+			
 
 			if (enemies[i].getPosition().x <= 0)
 			{
 				enemies.erase(enemies.begin() + i); // might have to change this to get exact enemy instead of just the last enemy in the vector
+				randoms.erase(randoms.begin() + i);
 			}
 		}
 	}
@@ -164,38 +199,5 @@ public:
 		return enemies.size();
 	}
 
-	std::vector<sf::RectangleShape> get_enemies() { return enemies; }
+	std::vector<sf::RectangleShape>* get_enemies() { return &enemies; }
 };
-
-
-
-
-
-
-
-/* Stephanie's update function for enemies
-void update(int maxEnemies, float& enemySpawnTimer, float enemySpawnTimerMax, int yPos) {
-		if (enemies.size() < maxEnemies)
-		{
-			if (enemySpawnTimer >= enemySpawnTimerMax)
-			{
-				enemySpawnTimer = 0.f;
-				spawn(yPos);
-			}
-			else
-			{
-				enemySpawnTimer += 1.f;
-			}
-		}
-
-		for (int i = 0; i < enemies.size(); i++)
-		{
-			enemies[i].move(-3.f, 0.f);
-
-			if (enemies[i].getPosition().x <= 0)
-			{
-				enemies.erase(enemies.begin() + i);
-			}
-		}
-	}
-*/

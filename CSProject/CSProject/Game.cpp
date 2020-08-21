@@ -119,8 +119,10 @@ void Game::update()
 
 	vector<sf::RectangleShape>* b_ptr = user->get_bullets()->ret_bullets();
 	vector<sf::RectangleShape>* e_ptr = basicenemy->get_enemies();
+	vector<sf::RectangleShape>* d_ptr = diagenemy->get_enemies();
 
 	checkCollisions(b_ptr, e_ptr);
+	checkCollisions(b_ptr, d_ptr);
 }
 
 void Game::render()
