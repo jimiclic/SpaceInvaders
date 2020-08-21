@@ -70,8 +70,8 @@ public:
 		}
 	}
 
-	void addpoint() {
-		points++;
+	void addpoint(int amount) {
+		points += amount;
 	}
 
 	int get_score() { return points; }

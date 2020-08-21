@@ -1,17 +1,28 @@
 ﻿  Game.cpp
-C:\Users\jimic\Documents\GitHub\DinoDash2\CSProject\CSProject\Bullets.h(27,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\jimic\Documents\GitHub\DinoDash2\CSProject\CSProject\Bullets.h(27,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\jimic\Documents\GitHub\DinoDash2\CSProject\CSProject\Bullets.h(32,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\jimic\Documents\GitHub\DinoDash2\CSProject\CSProject\Player.h(38,41): warning C4244: 'argument': conversion from 'const T' to 'int', possible loss of data
+C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\CSProject\Bullets.h(27,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\CSProject\Bullets.h(27,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\CSProject\Bullets.h(32,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\CSProject\Player.h(38,41): warning C4244: 'argument': conversion from 'const T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\jimic\Documents\GitHub\DinoDash2\CSProject\CSProject\Game.cpp(101,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\jimic\Documents\GitHub\DinoDash2\CSProject\CSProject\Game.cpp(102,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\CSProject\Game.cpp(112,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\CSProject\Game.cpp(113,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\CSProject\Game.cpp(126,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\CSProject\Game.cpp(127,21): warning C4018: '<': signed/unsigned mismatch
+  Main.cpp
+C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\CSProject\Bullets.h(27,39): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\CSProject\Bullets.h(27,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\CSProject\Bullets.h(32,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\CSProject\Player.h(38,41): warning C4244: 'argument': conversion from 'const T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
   Generating code
-  2 of 300 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
+  1 of 313 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  CSProject.vcxproj -> C:\Users\jimic\Documents\GitHub\DinoDash2\CSProject\Release\CSProject.exe
+  CSProject.vcxproj -> C:\Users\Ryan Doan\source\repos\DinoDash2\CSProject\Release\CSProject.exe

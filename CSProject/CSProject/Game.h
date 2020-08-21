@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Bullets.h"
 #include "Enemies.h"
+#include "Powerup.h"
 
 class Game
 {
@@ -20,11 +21,13 @@ private:
 
 	// Game logic
 	float enemySpawnTimer;
+	float PowerupTimer;
 
 	// Game characters
 	Player* user;
 	BasicEnemy* basicenemy;
 	DiagEnemy* diagenemy;
+	BasicPowerup* powerup;
 
 	// Private Functions
 	void initializeVariables();
@@ -43,6 +46,7 @@ public:
 	void renderEnemy();
 	void renderBullets();
 	void renderPlayer();
+	void renderPowerup();
 
 	void pollEvents(); // this is for event polling
 	void update(); // this is for the display
@@ -50,6 +54,7 @@ public:
 
 	bool check_collide(sf::RectangleShape a, sf::RectangleShape b);
 	void checkCollisions(std::vector<sf::RectangleShape>* b, std::vector<sf::RectangleShape>* e);
+	void checkPowerupCollisions(std::vector<sf::RectangleShape>* b, std::vector<sf::RectangleShape>* p);
 };
 
 #endif

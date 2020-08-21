@@ -8,6 +8,7 @@ void Game::initializeVariables()
 {
 	this->window = nullptr;
 	this->enemySpawnTimer = 0.f;
+	this->PowerupTimer = 0.f;
 }
 
 void Game::initWindow()
@@ -27,6 +28,7 @@ Game::Game()
 	user = new Player();
 	basicenemy = new BasicEnemy();
 	diagenemy = new DiagEnemy();
+	powerup = new BasicPowerup();
 }
 
 Game::~Game()
@@ -34,6 +36,7 @@ Game::~Game()
 	delete user;
 	delete basicenemy;
 	delete diagenemy;
+	delete powerup;
 	delete this->window;
 }
 
@@ -66,6 +69,14 @@ void Game::renderBullets()
 void Game::renderPlayer()
 {
 	this->window->draw(*(user->get_player()));
+}
+
+void Game::renderPowerup()
+{
+	for (size_t i = 0; i < powerup->getBasicPowerupSize(); i++)
+	{
+		this->window->draw(powerup->getBasicPowerup(i));
+	}
 }
 
 void Game::pollEvents()
@@ -101,10 +112,24 @@ void Game::checkCollisions(std::vector<sf::RectangleShape>* b, std::vector<sf::R
 	for (int i = 0; i < b->size(); i++) {
 		for (int j = 0; j < e->size(); j++) {
 			if (check_collide((*b)[i], (*e)[j])) {
-				user->addpoint();
+				user->addpoint(1);
 				cout << "SCORE: " << user->get_score() << endl;
 				b->erase(b->begin() + i);
 				e->erase(e->begin() + j);
+			}
+		}
+	}
+}
+
+void Game::checkPowerupCollisions(std::vector<sf::RectangleShape>* b, std::vector<sf::RectangleShape>* p)
+{
+	for (int i = 0; i < b->size(); i++) {
+		for (int j = 0; j < p->size(); j++) {
+			if (check_collide((*b)[i], (*p)[j])) {
+				user->addpoint(10);
+				cout << "SCORE: " << user->get_score() << endl;
+				b->erase(b->begin() + i);
+				p->erase(p->begin() + j);
 			}
 		}
 	}
@@ -116,13 +141,16 @@ void Game::update()
 	basicenemy->updateEnemy(enemySpawnTimer);
 	diagenemy->updateEnemy(enemySpawnTimer);
 	user->updateBullets();
+	powerup->updatePowerup(PowerupTimer);
 
 	vector<sf::RectangleShape>* b_ptr = user->get_bullets()->ret_bullets();
 	vector<sf::RectangleShape>* e_ptr = basicenemy->get_enemies();
 	vector<sf::RectangleShape>* d_ptr = diagenemy->get_enemies();
+	vector<sf::RectangleShape>* p_ptr = powerup->get_powerup();
 
 	checkCollisions(b_ptr, e_ptr);
 	checkCollisions(b_ptr, d_ptr);
+	checkPowerupCollisions(b_ptr, p_ptr);
 }
 
 void Game::render()
@@ -134,6 +162,7 @@ void Game::render()
 	this->renderEnemy();
 	this->renderBullets();
 	this->renderPlayer();
+	this->renderPowerup();
 
 	// Displays new frame
 	this->window->display();
