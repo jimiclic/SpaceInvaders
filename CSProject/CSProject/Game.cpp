@@ -57,7 +57,7 @@ void Game::renderEnemy()
 
 void Game::renderBullets()
 {
-	for (auto& e : user->get_bullets()->get_bullets())
+	for (auto& e : *(user->get_bullets()->ret_bullets()))
 	{
 		this->window->draw(e);
 	}
@@ -90,19 +90,24 @@ void Game::pollEvents()
 	}
 }
 
-void Game::checkCollisions() { //if bullet is 2 units within the enemy, then the user gets a point
-	std::vector<sf::RectangleShape>* b = &(user->get_bullets()->get_bullets());
-	std::vector<sf::RectangleShape>* e = &(basicenemy->get_enemies());
+bool Game::check_collide(sf::RectangleShape a, sf::RectangleShape b) {
+	if (abs(a.getPosition().x - b.getPosition().x) < 40 && abs(a.getPosition().y - b.getPosition().y) < 40) {
+		return true;
+	}
+	return false;
+}
 
-	//for (int i = 0; i < b->size(); i++) {
-	//	for (int j = 0; j < e->size(); j++) {
-	//		if (abs((*e)[j].getPosition().x - (*b)[i].getPosition().x) < 10 && abs((*e)[j].getPosition().y - (*b)[i].getPosition().y) < 10) {
-	//			b->erase(b->begin() + i);
-	//			e->erase(e->begin() + j);
-	//			cout << "collision detected" << endl;
-	//		}
-	//	}
-	//}
+void Game::checkCollisions(std::vector<sf::RectangleShape>* b, std::vector<sf::RectangleShape>* e) {
+	for (int i = 0; i < b->size(); i++) {
+		for (int j = 0; j < e->size(); j++) {
+			if (check_collide((*b)[i], (*e)[j])) {
+				cout << "collision detected" << endl;
+				user->addpoint();
+				b->erase(b->begin() + i);
+				e->erase(e->begin() + j);
+			}
+		}
+	}
 }
 
 void Game::update()
@@ -111,7 +116,11 @@ void Game::update()
 	basicenemy->updateEnemy(enemySpawnTimer);
 	diagenemy->updateEnemy(enemySpawnTimer);
 	user->updateBullets();
-	//checkCollisions();
+
+	vector<sf::RectangleShape>* b_ptr = user->get_bullets()->ret_bullets();
+	vector<sf::RectangleShape>* e_ptr = basicenemy->get_enemies();
+
+	checkCollisions(b_ptr, e_ptr);
 }
 
 void Game::render()

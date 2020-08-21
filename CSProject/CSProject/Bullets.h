@@ -21,7 +21,7 @@ public:
 		singlebullet.setFillColor(sf::Color(255, 204, 204));
 	}
 
-	std::vector<sf::RectangleShape> get_bullets() { return bullets; }
+	std::vector<sf::RectangleShape>* ret_bullets() { return &bullets; }
 
 	void add(int Xpos, int Ypos) {
 		singlebullet.setPosition(Xpos, Ypos + 35);

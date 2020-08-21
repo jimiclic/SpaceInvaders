@@ -48,7 +48,8 @@ public:
 	void update(); // this is for the display
 	void render();
 
-	void checkCollisions();
+	bool check_collide(sf::RectangleShape a, sf::RectangleShape b);
+	void checkCollisions(std::vector<sf::RectangleShape>* b, std::vector<sf::RectangleShape>* e);
 };
 
 #endif

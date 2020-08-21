@@ -53,19 +53,19 @@ public:
 		}
 		else {
 			for (int i = 0; i < 10; i++) {
-				player->move(0.f, -1.f);
+				player->move(0.f, -3.f);
 			}
 		}
 	}
 
 	void moveDown() {
-		if (player->getPosition().y > 500) {
+		if (player->getPosition().y > 420) {
 			sf::Vector2f pos = player->getPosition();
-			player->setPosition(pos.x, 500);
+			player->setPosition(pos.x, 420);
 		}
 		else {
 			for (int i = 0; i < 10; i++) {
-				player->move(0.f, 1.f);
+				player->move(0.f, 3.f);
 			}
 		}
 	}

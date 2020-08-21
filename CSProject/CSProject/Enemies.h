@@ -93,7 +93,7 @@ public:
 		return enemies.size();
 	}
 
-	std::vector<sf::RectangleShape> get_enemies() { return enemies; }
+	std::vector<sf::RectangleShape>* get_enemies() { return &enemies; }
 };
 
 class DiagEnemy : public Enemy
