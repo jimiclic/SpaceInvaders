@@ -30,6 +30,7 @@ public:
 		life = lifepoints;
 		damage = damagepoints;
 	}
+	virtual void spawnEnemy() = 0;
 	virtual bool updateEnemy(float& enemySpawnTimer) = 0;
 	// virtual void renderEnemy(Game* game) = 0; might not need since we're rendering from game class
 };
@@ -69,7 +70,7 @@ public:
 		// mechanism for spawning the enemy
 		// this is more of a counter for enemy spawning instead of spawning them randomly, I'll work on getting it to be random
 
-		if (static_cast<int>(enemySpawnTimer) % 100 == 0)
+		if (static_cast<int>(enemySpawnTimer) % 150 == 0)
 		{
 			spawnEnemy();
 		}
@@ -152,7 +153,7 @@ public:
 	virtual bool updateEnemy(float& enemySpawnTimer)
 	{
 		int a = 0;
-		if (static_cast<int>(enemySpawnTimer) % 200 == 0)
+		if (static_cast<int>(enemySpawnTimer) % 300 == 0)
 		{
 			spawnEnemy();
 		}
@@ -261,23 +262,23 @@ public:
 		// mechanism for spawning the enemy
 		// this is more of a counter for enemy spawning instead of spawning them randomly, I'll work on getting it to be random
 
-		if (static_cast<int>(enemySpawnTimer) % 300 == 0)
+		if (static_cast<int>(enemySpawnTimer) % 500 == 0)
 		{
 			spawnEnemy();
 		}
-		if (static_cast<int>(enemySpawnTimer) % 302 == 0)
+		if (static_cast<int>(enemySpawnTimer) % 502 == 0)
 		{
 			spawnEnemyAfter();
 		}
-		if (static_cast<int>(enemySpawnTimer) % 304 == 0)
+		if (static_cast<int>(enemySpawnTimer) % 504 == 0)
 		{
 			spawnEnemyAfter();
 		}
-		if (static_cast<int>(enemySpawnTimer) % 306 == 0)
+		if (static_cast<int>(enemySpawnTimer) % 506 == 0)
 		{
 			spawnEnemyAfter();
 		}
-		if (static_cast<int>(enemySpawnTimer) % 308 == 0)
+		if (static_cast<int>(enemySpawnTimer) % 508 == 0)
 		{
 			spawnEnemyAfter();
 		}
