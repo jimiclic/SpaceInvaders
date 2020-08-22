@@ -226,10 +226,10 @@ private:
 public:
 	SnakeEnemy() : Enemy{ 1, 1 }
 	{
-		shape.setSize(sf::Vector2f(20.f, 20.f));
+		shape.setSize(sf::Vector2f(50.f, 50.f));
 
 		enemyTexture.loadFromFile("snakeenemy.png");
-		shape.setTexture(&enemyTexture);
+		shape.setTexture(&enemyTexture, true);
 		enemyTexture.setSmooth(true);
 	}
 
